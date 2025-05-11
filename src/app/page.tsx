@@ -1,103 +1,146 @@
-import Image from "next/image";
+"use client";
 
+import { Particles } from "@/components/Particles";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+const AnimatedText = ({ text }: { text: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const words = containerRef.current?.querySelectorAll(".word");
+
+    if (words && words.length > 0) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top center",
+          end: "bottom+=1% 70%", // Adjust scroll range
+          scrub: 1,
+        },
+      });
+
+      words.forEach((word, index) => {
+        tl.fromTo(
+          word,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          index * 0.1 // delay between words in timeline
+        );
+      });
+    }
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="overflow-hidden flex flex-wrap justify-center min-h-[200vh] "
+    >
+      {text.split(" ").map((word, index) => (
+        <span key={index} className="word inline-block mr-2 whitespace-nowrap">
+          {word}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const AnimatedTitle = ({ text }: { text: string }) => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const reflectionRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const letters = titleRef.current?.querySelectorAll(".letter");
+
+    // Disable scroll on mount
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    if (letters && letters.length > 0 && reflectionRef.current) {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          // Re-enable scroll when animation is done
+          document.body.style.overflow = originalOverflow;
+        },
+      });
+
+      tl.set(letters, { opacity: 0, y: 50, scale: 0.95 });
+
+      tl.to(letters, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "power3.out",
+        stagger: 0.08,
+        delay: 0.3,
+      });
+
+      tl.fromTo(
+        reflectionRef.current,
+        { opacity: 0, y: -10 },
+        { opacity: 0.3, y: 0, duration: 1, ease: "power2.out" },
+        "-=0.4"
+      );
+    }
+
+    // Fallback in case animation is skipped/interrupted
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  return (
+    <div className="relative text-center mb-16">
+      {/* Glowing Title */}
+      <h1
+        ref={titleRef}
+        className="text-[#2c1056] text-6xl md:text-8xl font-bold tracking-tighter main-title z-10 relative"
+      >
+        {text.split("").map((char, index) => (
+          <span
+            key={index}
+            className="letter inline-block"
+            style={
+              {
+                // textShadow: "0 0 8px rgba(0,0,0,0.8), 0 0 15px rgba(0,0,0,0.4)",
+              }
+            }
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </h1>
+
+      <h1
+        ref={reflectionRef}
+        className="absolute left-0 right-0 top-full mt-2 transform scale-y-[-1] text-[#250D4A] text-6xl md:text-8xl font-bold tracking-tighter blur-sm opacity-0 pointer-events-none"
+      >
+        {text}
+      </h1>
+    </div>
+  );
+};
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="">
+      {/* <div className="fixed inset-0 bg-gradient-to-br from-black via-[#1a0033] to-[#2d0066] z-0"> */}
+      {/* <Particles className="absolute inset-0" quantity={200} /> */}
+      {/* </div> */}
+      <div className="z-1">
+        <div className="h-[40vh]" />
+        <AnimatedTitle text="Nyxal" />
+        <div className="mx-auto sm:w-5/6  md:w-3/4">
+          <h1 className="main-title text-6xl md:text-8xl font-bold tracking-tighter text-center mb-8 text-[#2c1056] opacity-80">
+            <AnimatedText text="Onde muitos enxergam software, nós vemos legado. Somos engenheiros movidos pela inovação, esculpimos soluções sob medida com a minúcia de quem protege sua assinatura, transformando grandes ambições em jornadas digitais perfeitas." />
+          </h1>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      <div className="h-[40vh]"></div>
     </div>
   );
 }
