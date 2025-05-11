@@ -1,7 +1,4 @@
 "use client";
-
-import { Particles } from "@/components/Particles";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
