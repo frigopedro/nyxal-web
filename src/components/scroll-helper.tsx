@@ -41,7 +41,7 @@ export default function ScrollHelper() {
     };
 
     // Wait a bit before showing the indicator
-    setTimeout(createScrollIndicator, 1500);
+    setTimeout(createScrollIndicator, 2000);
 
     return () => {
       window.removeEventListener("scroll", () => {});
