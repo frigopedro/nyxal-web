@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ScrollHelper from "@/components/scroll-helper";
 
 gsap.registerPlugin(ScrollTrigger);
 const AnimatedText = ({ text }: { text: string }) => {
@@ -135,6 +136,8 @@ export default function Home() {
             <AnimatedText text="Onde muitos enxergam software, nós vemos legado. Somos engenheiros movidos pela inovação, esculpimos soluções sob medida com a minúcia de quem protege sua assinatura, transformando grandes ambições em jornadas digitais perfeitas." />
           </h1>
         </div>
+
+        <ScrollHelper />
       </div>
 
       <div className="h-[40vh]"></div>
