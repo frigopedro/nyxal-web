@@ -50,7 +50,6 @@ export default function Home() {
         </div>
       </div>
       <div className="h-[40vh]"></div>
-      d
       <ScrollHelper />
       <Footer />
     </div>
