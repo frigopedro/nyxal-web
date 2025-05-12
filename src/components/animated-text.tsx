@@ -34,7 +34,7 @@ export const AnimatedText = ({ text }: { text: string }) => {
       className="overflow-hidden flex flex-wrap justify-center min-h-[200vh] "
     >
       {text.split(" ").map((word, index) => (
-        <span key={index} className="word inline-block mr-2 whitespace-nowrap">
+        <span key={index} className="word inline-block mr-4 whitespace-nowrap ">
           {word}
         </span>
       ))}

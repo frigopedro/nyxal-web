@@ -11,7 +11,7 @@ export default function ScrollHelper() {
         "fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-col items-center animate-bounce opacity-80";
 
       const text = document.createElement("div");
-      text.className = "text-black text-sm mb-2";
+      text.className = "text-black text-sm mb-2 font-bold";
       text.textContent = "Role para baixo";
 
       const arrow = document.createElement("div");

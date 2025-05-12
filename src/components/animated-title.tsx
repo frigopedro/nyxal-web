@@ -58,7 +58,8 @@ export const AnimatedTitle = ({ text }: { text: string }) => {
             className="letter inline-block"
             style={
               {
-                // textShadow: "0 0 8px rgba(0,0,0,0.8), 0 0 15px rgba(0,0,0,0.4)",
+                // textShadow:
+                //   "0 0 8px rgba(44,16,96,0.4), 0 0 15px rgba(75,32,139,0.)",
               }
             }
           >
